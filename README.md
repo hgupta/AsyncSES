@@ -105,5 +105,5 @@ Read the comments on config.py for more details.
 
 ### License:
 
-* MIT (see LICENSE for details)
+* MIT (see [LICENSE](https://github.com/robss/AmazonSES-Sendmail/blob/master/LICENSE) for details)
 
