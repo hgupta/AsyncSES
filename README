@@ -3,9 +3,9 @@ AmazonSES Sendmail
 
 About:
 
-Non blocking (async) email library to use with Amazon SES. Uses Bottle (bottlepy.org) for HTTP API and Gevent for lightweight concurrency.
+Non-blocking (async) email library to use with Amazon SES. Uses Bottle (bottlepy.org) for HTTP API and Gevent for lightweight concurrency.
 
-This library has been used in production to send more than half million messages per day. If you have a high send rate limit on your Amazon SES account, you can easily send thousands of emails per second with this library.
+This library has been used in production to send more than half million messages per day. If you have a high send rate limit on your Amazon SES account, you can easily send thousands of emails per minute with this library.
 
 With Gevent green-threads we don't waste our time waiting for a reply from Amazon SES API before send the next message. Each worker runs on it own pseudo-thread, without locks. All messages received by this library will be included on a Queue, while all workers catch each message and send it independently.
 
@@ -14,8 +14,8 @@ With Gevent green-threads we don't waste our time waiting for a reply from Amazo
 Requirements:
 - gevent
 - cjson (optional but recommended)
-- bottle (included)
-- amazon_ses (included)
+- bottle (included in lib/)
+- amazon_ses (included in lib/)
 
 
 
