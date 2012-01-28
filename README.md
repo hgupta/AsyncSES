@@ -3,7 +3,7 @@
 
 ### About:
 
-Non-blocking (async) email library to use with Amazon SES. Uses Bottle (bottlepy.org) for HTTP API and Gevent for lightweight concurrency.
+Non-blocking (async) email library to use with Amazon SES. Uses [Bottle](http://bottlepy.org) for HTTP API and [Gevent](http://www.gevent.org/) for lightweight concurrency.
 
 With Gevent green-threads we don't waste our time waiting for a reply from Amazon SES API before send the next message. Each worker runs on it own pseudo-thread, without locks. All messages received by this library will be included on a Queue, while all workers catch each message and send it independently.
 
@@ -23,8 +23,8 @@ This library has been used in production to send more than half million messages
 
 1. Insert your AmazonSES access key in config.py
 2. Start the server:  python start.py
-3. Access the /add url in your browser: http://localhost:3000/add/?from=your@email.com&to=another@email.com&subject=subject&text=message+text
-
+3. Access the [/add url](http://localhost:3000/add/?from=your@email.com&to=another@email.com&subject=subject&text=message+text
+) in your browser.
 
 
 ### Config:
@@ -86,7 +86,7 @@ Read the comments on config.py for more details.
 
 ### Know issues:
 
-* AmazonSES has some sending limits: the sending quota and maximum send rate (see http://aws.amazon.com/ses/#details). At this moment this library doesn't care about it, presumes that you have large limits and a good reputation :)
+* AmazonSES has some [sending limits](http://aws.amazon.com/ses/#details): the sending quota and maximum send rate. At this moment this library doesn't care about it, presumes that you have large limits and a good reputation :)
 
 
 
