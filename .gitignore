@@ -1,5 +1,5 @@
 *.pyc
 *.pyo
 *.swp
-src/bin/
-src/logs/
+bin/
+logs/
