@@ -32,7 +32,7 @@ This library has been used in production to send more than half million messages
 The file config.py has (at this time) few options to configure:
 
 * DEBUG: turn on bottle DEBUG;
-* AMAZON_KEY and AMAZON_SECRET: your Amazon id and secret;
+* AMAZON_KEY and AMAZON_SECRET: your Amazon ID and Secret;
 * HOST and PORT: default host and port to listen;
 * WORKERS: number of workers to run in parallel;
 * OUTBOX_MAXSIZE: the size of outbox queue;
