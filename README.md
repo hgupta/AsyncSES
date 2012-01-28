@@ -7,6 +7,12 @@ Non-blocking (async) email library to use with Amazon SES. Uses [Bottle](http://
 
 With Gevent green-threads we don't waste our time waiting for a reply from Amazon SES API before send the next message. Each worker runs on it own pseudo-thread, without locks. All messages received by this library will be included on a Queue, while all workers catch each message and send it independently.
 
+There's only one lock that can be happen if your OUTBOX is full. In this case, you probably need to raise up the number of WORKERS or the OUTBOX_MAXSIZE in config.py file.
+
+Please note that all messages in OUTBOX are stored in memory. If your messages are big and your outbox are accepting a large number of messages, you can run out of memory.
+
+In future this library will work with some persistence to avoid this problem with huge queues.
+
 This library has been used in production to send more than half million messages per day. If you have a high send rate limit on your Amazon SES account, you can easily send thousands of emails per minute with this library.
 
 
@@ -37,12 +43,12 @@ The file config.py has (at this time) few options to configure:
 * WORKERS: number of workers to run in parallel;
 * OUTBOX_MAXSIZE: the size of outbox queue;
 
-Read the comments on config.py for more details.
+Read the comments at config.py for more details.
 
 
 ### Details:
 
-* Both POST and GET methods are allowed for include messages in queue.
+* Both POST and GET methods are allowed for /add url.
 * You can view the status of queue accessing the url /status.
 * All logs are written on file logs/worker.log.
 * You can send HTML emails just passing the "html" field to /add url.
