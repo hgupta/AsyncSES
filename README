@@ -6,7 +6,7 @@ Non blocking email library for use with AmazonSES service.
 
 Requirements:
 - gevent
-- cjson
+- cjson (optional but recommended)
 - bottle (included)
 - amazon_ses (included)
 

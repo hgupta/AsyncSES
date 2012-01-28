@@ -1,4 +1,10 @@
-import cjson
+try:
+    import cjson
+    json_encode = cjson.encode
+    json_decode = cjson.decode
+except ImportError:
+    from json import loads as json_decode, dumps as json_encode
+
 import itertools
 from lib.bottle import default_app, run, route, request
 from lib.amazon_ses import AmazonSES
@@ -23,7 +29,7 @@ rejected = itertools.count()
 def error_msg(msg):
     data = {'status': 'error', 'message': msg}
     rejected.next()
-    return cjson.encode(data)
+    return json_encode(data)
 
 
 @route('/status')
@@ -53,7 +59,7 @@ def add():
     headers = request.params.get('headers', None)
     if headers:
         try:
-            headers = cjson.decode(headers)
+            headers = json_decode(headers)
             data['headers'] = headers
         except:
             return error_msg('headers contains invalid json data')
@@ -66,7 +72,7 @@ def add():
     queued.next()
     resp = {'status': 'queued', 'message': 'ok',}
 
-    return cjson.encode(resp)
+    return json_encode(resp)
 
 
 def runserver(host, port):
