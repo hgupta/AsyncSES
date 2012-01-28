@@ -14,7 +14,7 @@ Usage:
 
 - Insert your AmazonSES access key in src/config.py
 - Start the server:  python start.py
-- Access the /add url in your browser: http://localhost:3000/add/?from=your@email.com&to=another@email.com&subject=subject&text=message text
+- Access the /add url in your browser: http://localhost:3000/add/?from=your@email.com&to=another@email.com&subject=subject&text=message+text
 
 
 Details:
