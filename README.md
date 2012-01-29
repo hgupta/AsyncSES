@@ -74,7 +74,7 @@ Read comments at config.py file for more details.
     # message data
     data = {
         'from': 'you@example.com',
-        'to:' 'you@example.com',
+        'to': 'you@example.com',
         'subject': 'Hello dude',
         'text': 'AsyncSES test.',
         'html': '<b>AsyncSES</b> test.',
