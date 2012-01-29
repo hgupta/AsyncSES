@@ -24,8 +24,10 @@ This library has been used in production to send more than half million messages
 
 1. Insert your AmazonSES access key in config.py
 2. Start the server:  python start.py
-3. Access the [/add url](http://localhost:3000/add/?from=your@email.com&to=another@email.com&subject=subject&text=message+text
-) in your browser.
+3. Send your emails (see Python client example below)
+
+If you just want to do some tests, you can access the [/add url](http://localhost:3000/add/?from=your@email.com&to=another@email.com&subject=subject&text=message+text
+) in your browser. Just change the params (from, to, subject, text) and the email will be sent.
 
 
 ### Config:
