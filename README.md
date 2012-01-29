@@ -8,7 +8,7 @@ With Gevent green-threads we don't waste our time waiting for a reply from Amazo
 
 There's only one lock that can happen if your OUTBOX is full. In this case, you probably need to raise up the number of WORKERS or the OUTBOX_MAXSIZE in config.py file.
 
-Please note that all messages in OUTBOX are stored in memory. If your messages are big and your outbox are accepting a large number of messages, you can run out of memory. In future this library will support persistence to avoid this problem with huge queues.
+Please note that all messages in OUTBOX are stored in memory. If your messages are big and your outbox are accepting a large number of messages, you can run out of memory. In future this library will support persistence to avoid problems with huge queues.
 
 This library has been used in production to send more than half million messages per day. If you have a high send rate limit on your Amazon SES account, you can easily send thousands of emails per minute.
 
