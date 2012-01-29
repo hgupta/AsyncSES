@@ -1,16 +1,24 @@
-# AmazonSES Sendmail
+# AsyncSES
 
-AmazonSES Sendmail is a language-agnostic, non-blocking (async) sendmail library to use with Amazon SES.
+AsyncSES is a asynchronous email library over HTTP protocol, to use with Amazon SES.
 
-Uses [Bottle](http://bottlepy.org) for HTTP API and [Gevent](http://www.gevent.org/) for lightweight concurrency.
+It's written in Python, but provides a full featured API to use with any programming language.
 
-With Gevent green-threads we don't waste our time waiting for a reply from Amazon SES API before send the next message. Each worker runs on it own pseudo-thread, without locks. All messages received by this library will be included on a Queue, while all workers catch each message and send it independently.
+AsyncSES uses [Bottle](http://bottlepy.org) for HTTP REST API and [Gevent](http://www.gevent.org/) for lightweight concurrency.
 
-There's only one lock that can happen if your OUTBOX is full. In this case, you probably need to raise up the number of WORKERS or the OUTBOX_MAXSIZE in config.py file.
 
-Please note that all messages in OUTBOX are stored in memory. If your messages are big and your outbox are accepting a large number of messages, you can run out of memory. In future this library will support persistence to avoid problems with huge queues.
 
-This library has been used in production to send more than half million messages per day. If you have a high send rate limit on your Amazon SES account, you can easily send thousands of emails per minute.
+### Why AsyncSES?
+
+If you just want to send some emails by AmazonSES, AsyncSES is not for you. Use [python-amazon-ses-api](https://github.com/pankratiev/python-amazon-ses-api) instead of AsyncSES.
+
+But if you intend to send large number of emails and is worried delivery all of them in time, AsyncSES is what you need.
+
+Using gevent green-threads, AsyncSES don't waste time waiting for a reply from Amazon SES API before send the next message. 
+
+Each worker runs on it own pseudo-thread, without locks or waitings. All messages are included on a outbox queue, while all workers catch each message and send it independently.
+
+AsyncSES has been used in production to send more than half million messages per day in just a few hours.
 
 
 ### Requirements
@@ -23,8 +31,9 @@ This library has been used in production to send more than half million messages
 ### Usage
 
 1. Insert your AmazonSES access key in config.py
-2. Start the server:  python start.py
-3. Send your emails (see Python client example below)
+2. Set WORKERS and OUTBOX_MAXSIZE as needed, in config.py
+3. Start the server:  python start.py
+4. Send your emails (see Python client example below)
 
 If you just want to do some tests, you can access the [/add url](http://localhost:3000/add/?from=your@email.com&to=another@email.com&subject=subject&text=message+text
 ) in your browser. Just change the params (from, to, subject, text) and the email will be sent.
@@ -49,8 +58,8 @@ Read comments at config.py file for more details.
 * [/quota](http://localhost:3000/quota) - Return your Amazon SES quota (max-24h-send, sent-last-24h and max-send-rate)
 * [/statistics](http://localhost:3000/statistics) - Return your Amazon SES usage statistics.
 * [/verify](http://localhost:3000/verify) - Return your verified email address (by Amazon).
-* [/verify/add](http://localhost:3000/verify/add) - Verify email address. Send the email as param. [example](http://localhost:3000/verify/add?email=xxx@xxx.com).
-* [/verify/del](http://localhost:3000/verify/del) - Unverify email address. Send the email as param. [example] (http://localhost:3000/verify/del?email=xxx@xxx.com).
+* [/verify/add](http://localhost:3000/verify/add) - Verify email address. Send the email as param. [example](http://localhost:3000/verify/add?email=AsyncSES@AsyncSES.com).
+* [/verify/del](http://localhost:3000/verify/del) - Unverify email address. Send the email as param. [example] (http://localhost:3000/verify/del?email=AsyncSES@AsyncSES.com).
 * All logs are written on logs/worker.log file. (Exceptions, errors and sent emails).
 * All API responses are in json format.
 * All API requests can be made in GET and POST methods.
@@ -92,13 +101,15 @@ Read comments at config.py file for more details.
 
 ### Know issues
 
-* AmazonSES has some [sending limits](http://aws.amazon.com/ses/#details): the sending quota and maximum send rate. At this moment this library doesn't care about it and presumes that you have large limits and a good reputation in AmazonSES. At this time we have only one workaround. To control how much emails per second will be sent you can just adjust the number of workers at config.py file. It's not precise, but works.
+* AmazonSES has some [sending limits](http://aws.amazon.com/ses/#details): the sending quota and maximum send rate. At this moment AsyncSES doesn't care about it and presumes that you have large limits and a good reputation in AmazonSES. At this time there's only one workaround to control how much emails per second will be sent: you can just adjust the number of workers at config.py file. It's not precise, but works (poorly).
+
+* Please note that all messages in OUTBOX are stored in memory. If your messages are big and your outbox are accepting a large number of messages, you can run out of memory. 
 
 
 ### Todo
 
 * Treat AmazonException's generated by sending limits. Maybe re-add messages in queue and automaticaly decrease the sending rate.
-* Create some persistence to store messages when outbox is full.
+* Support persistence to store messages and avoid problems with huge queues.
 * Correct my english mistakes at README and project comments :)
 
 
