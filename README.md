@@ -43,16 +43,21 @@ The config.py file has (at this time) just a few options to configure:
 Read comments at config.py file for more details.
 
 
-### Details:
+### Features:
 
-* Both POST and GET methods are allowed for /add url.
-* You can view the status of queue accessing the url /status.
-* All logs are written on file logs/worker.log.
-* You can send HTML emails just passing the "html" field to /add url.
-* You can define specific headers, but some are blocked by AmazonSES.
+* [/add](http://localhost:3000/add) - Add message to outbox. Accept both POST and GET methods.
+* [/status](http://localhost:3000/status) - Return how much emails are queued, sent, errors and how much messages are in outbox.
+* [/quota](http://localhost:3000/quota) - Return your Amazon SES quota (max-24h-send, sent-last-24h and max-send-rate)
+* [/statistics](http://localhost:3000/statistics) - Return your Amazon SES usage statistics.
+* [/verify](http://localhost:3000/verify) - Return your verified emails (by Amazon).
+* [/verify/add](http://localhost:3000/verify/add) - Verify email address. Send the email as param. [example](http://localhost:3000/verify/add?email=xxx@xxx.com).
+* [/verify/del](http://localhost:3000/verify/del) - Unverify email address. Send the email as param. [example] (http://localhost:3000/verify/del?email=xxx@xxx.com).
+* All logs are written on file logs/worker.log. (Exceptions, errors and sent emails).
 
 
-### Python client example:
+### Python client examples:
+
+* Sending email
 
     import urllib, urllib2, json
 

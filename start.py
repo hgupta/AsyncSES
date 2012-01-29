@@ -32,19 +32,6 @@ def error_msg(msg):
     return json_encode(data)
 
 
-@route('/status')
-@route('/status/')
-def index():
-    getvalue = lambda x: str(x.__reduce__()[1][0])
-    sent_qtd = getvalue(sent)
-    error_qtd = getvalue(error)
-    queued_qtd = getvalue(queued)
-    rejected_qtd = getvalue(rejected)
-    msg = u'Queued: %s\nRejected: %s\nSent: %s\nError: %s\n' % \
-          (queued_qtd, rejected_qtd, sent_qtd, error_qtd)
-    return msg.replace('\n', '<br/>')
-
-
 @route('/add', method=['GET', 'POST'])
 @route('/add/', method=['GET', 'POST'])
 def add():
@@ -72,6 +59,69 @@ def add():
     queued.next()
     resp = {'status': 'queued', 'message': 'ok',}
 
+    return json_encode(resp)
+
+
+@route('/status')
+@route('/status/')
+def index():
+    getvalue = lambda x: str(x.__reduce__()[1][0])
+    resp = {
+        'sent': getvalue(sent),
+        'error': getvalue(error),
+        'queued': getvalue(queued),
+        'rejected': getvalue(rejected),
+        'outbox': outbox.qsize(),
+    }
+    return json_encode(resp)
+
+
+@route('/quota')
+@route('/quota/')
+def quota():
+    q = ses.getSendQuota()
+    resp = {
+        'max-24h-send': q.max24HourSend,
+        'sent-last-24h': q.sentLast24Hours,
+        'max-send-rate': q.maxSendRate,
+    }
+    return json_encode(resp)
+
+
+@route('/statistics')
+@route('/statistics/')
+def statistic():
+    s = ses.getSendStatistics()
+    resp = s.members
+    return json_encode(resp)
+
+
+@route('/verify')
+@route('/verify/')
+def verify():
+    v = ses.listVerifiedEmailAddresses()
+    return json_encode(v.members)
+
+
+@route('/verify/add')
+@route('/verify/add/')
+def verify():
+    email = request.params.get('email', None)
+    if not email:
+        return error_msg('Missing field email')
+    v = ses.verifyEmailAddress(email)
+    resp = {'status': 'ok', 'message': v.requestId,}
+    return json_encode(resp)
+
+
+@route('/verify/del')
+@route('/verify/del/')
+def verify():
+    email = request.params.get('email', None)
+    if not email:
+        return error_msg('Missing field email')
+    v = ses.deleteVerifiedEmailAddress(email)
+    resp = {'status': 'ok', 'message': v.requestId,}
     return json_encode(resp)
 
 
