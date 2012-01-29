@@ -59,19 +59,6 @@ queued = itertools.count()
 rejected = itertools.count()
 
 
-@route('/')
-def index():
-    """ Index view (/)
-    This is very ugly... ignore it
-    """
-    routes = [r.__dict__['rule'] for r in app.app.routes]
-    routes = [r for r in set(routes) if r != '/']
-    links = ['<a href="%s">%s</a>' % (r,r) for r in routes]
-    links_html = '<br/>'.join(links)
-    resp = u'<html><body>%s</body></html>' % links_html
-    return resp
-
-
 def error_msg(msg):
     """ Return error in json format
     """
@@ -205,6 +192,19 @@ def verify_del():
 
     resp = {'status': 'ok', 'message': v.requestId,}
     return json_encode(resp)
+
+
+@route('/')
+def index():
+    """ Index view (/)
+    This is very ugly... ignore it
+    """
+    routes = [r.__dict__['rule'] for r in app.app.routes]
+    routes = [r for r in set(routes) if r != '/']
+    links = ['<a href="%s">%s</a>' % (r,r) for r in routes]
+    links_html = '<br/>'.join(links)
+    resp = u'<html><body>%s</body></html>' % links_html
+    return resp
 
 
 def runserver(host, port):
