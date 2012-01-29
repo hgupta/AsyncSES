@@ -37,7 +37,10 @@ from config import *
 
 
 class StripPathMiddleware(object):
-    #http://bottlepy.org/docs/dev/recipes.html#ignore-trailing-slashes
+    """ Ignore trailing slashes from url path
+    http://bottlepy.org/docs/dev/recipes.html#ignore-trailing-slashes
+    """
+    
     def __init__(self, app):
         self.app = app
     
@@ -45,23 +48,28 @@ class StripPathMiddleware(object):
         e['PATH_INFO'] = e['PATH_INFO'].rstrip('/')
         return self.app(e,h)
 
+
+# app, outbox and ses instance
 app = StripPathMiddleware(default_app())
 outbox = Outbox(maxsize=OUTBOX_MAXSIZE)
 ses = AmazonSES(AMAZON_KEY, AMAZON_SECRET)
-required_fields = ['from', 'to', 'subject', 'text']
 
-
-# Thread-safe counters
+# thread-safe counters
 queued = itertools.count()
 rejected = itertools.count()
 
+
 def error_msg(msg):
+    """ Return error in json format
+    """
     data = {'status': 'error', 'message': msg}
     return json_encode(data)
 
 
 @route('/add', method=['GET', 'POST'])
 def add():
+    """ Add message to outbox.
+    """
     data = {
         'subject': request.params.get('subject', None),
         'from': request.params.get('from', None),
@@ -79,6 +87,7 @@ def add():
             rejected.next()
             return error_msg('headers contains invalid json data')
 
+    required_fields = ['from', 'to', 'subject', 'text']
     for field in required_fields:
         if not (data.has_key(field) and data[field]):
             rejected.next()
@@ -86,13 +95,16 @@ def add():
 
     outbox.put(data)
     queued.next()
+    
     resp = {'status': 'queued', 'message': 'ok',}
-
     return json_encode(resp)
 
 
 @route('/status', method=['GET', 'POST'])
-def index():
+def status():
+    """ Return how much emails are queued, sent, errors and 
+    how much messages are in outbox.
+    """
     getvalue = lambda x: str(x.__reduce__()[1][0])
     resp = {
         'sent': getvalue(sent),
@@ -106,10 +118,14 @@ def index():
 
 @route('/quota', method=['GET', 'POST'])
 def quota():
+    """ Return your Amazon SES quota
+    (max-24h-send, sent-last-24h and max-send-rate)
+    """
     try:
         q = ses.getSendQuota()
     except AmazonError, e:
         return error_msg(e.__unicode__())
+    
     resp = {
         'max-24h-send': q.max24HourSend,
         'sent-last-24h': q.sentLast24Hours,
@@ -120,58 +136,75 @@ def quota():
 
 @route('/statistics', method=['GET', 'POST'])
 def statistic():
+    """ Return your Amazon SES usage statistics.
+    """
     try:
         s = ses.getSendStatistics()
     except AmazonError, e:
         return error_msg(e.__unicode__())
+
     resp = s.members
     return json_encode(resp)
 
 
 @route('/verify', method=['GET', 'POST'])
 def verify():
+    """ Return your verified email address (by Amazon).
+    """
     try:
         v = ses.listVerifiedEmailAddresses()
     except AmazonError, e:
         return error_msg(e.__unicode__())
-    return json_encode(v.members)
+    
+    resp = v.members
+    return json_encode(resp)
 
 
 @route('/verify/add', method=['GET', 'POST'])
-def verify():
+def verify_add():
+    """ Verify email address. Send the email as param.
+    """
     email = request.params.get('email', None)
     if not email:
         return error_msg('Missing field email')
+
     try:
         v = ses.verifyEmailAddress(email)
     except AmazonError, e:
         return error_msg(e.__unicode__())
+
     resp = {'status': 'ok', 'message': v.requestId,}
     return json_encode(resp)
 
 
 @route('/verify/del', method=['GET', 'POST'])
-def verify():
+def verify_del():
+    """ Unverify email address. Send the email as param.
+    """
     email = request.params.get('email', None)
     if not email:
         return error_msg('Missing field email')
+
     try:
         v = ses.deleteVerifiedEmailAddress(email)
     except AmazonError, e:
         return error_msg(e.__unicode__())
+
     resp = {'status': 'ok', 'message': v.requestId,}
     return json_encode(resp)
 
 
 def runserver(host, port):
+    """ Start the server
+    """
     run(app=app, host=host, port=port, server='gevent')
 
 
 if __name__ == '__main__':
-    import os
-    import sys
+    import os, sys
     from gevent.pool import Pool
 
+    # try to parse host and port from sys.argv
     try:
         host, port = sys.argv[1:3]
     except:
@@ -179,10 +212,12 @@ if __name__ == '__main__':
         print 'Host and Port not defined. Using defaults'
         print
     
+    # include lib folder in sys.path
     bottle_path = os.path.join(
             os.path.dirname(os.path.abspath(__file__)), 'lib/')
     sys.path.append(bottle_path)
 
+    # create pool for workers and http api
     p = Pool()
     p.spawn(runserver, host, port)
     p.spawn(logger)
