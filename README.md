@@ -10,7 +10,7 @@ AsyncSES uses [Bottle](http://bottlepy.org) for HTTP REST API and [Gevent](http:
 
 ### Why AsyncSES?
 
-If you just want to send some emails by AmazonSES, AsyncSES is not for you. Use [python-amazon-ses-api](https://github.com/pankratiev/python-amazon-ses-api) instead of AsyncSES.
+If you just want to send some emails by Amazon SES, AsyncSES is not for you. Use [python-amazon-ses-api](https://github.com/pankratiev/python-amazon-ses-api) instead of AsyncSES.
 
 But if you intend to send large number of emails and is worried delivery all of them in time, AsyncSES is what you need.
 
@@ -30,12 +30,12 @@ AsyncSES has been used in production to send more than half million messages per
 
 ### Usage
 
-1. Insert your AmazonSES access key in config.py
+1. Insert your Amazon SES access key in config.py
 2. Set WORKERS and OUTBOX_MAXSIZE as needed, in config.py
 3. Start the server:  python start.py
 4. Send your emails (see Python client example below)
 
-If you just want to do some tests, you can access the [/add url](http://localhost:3000/add/?from=your@email.com&to=another@email.com&subject=subject&text=message+text
+If you just want to do some tests, you can access the [/add url](http://localhost:3000/add/?from=you@example.com&to=you@example.com&subject=subject&text=message+text
 ) in your browser. Just change the params (from, to, subject, text) and the email will be sent.
 
 
@@ -58,8 +58,8 @@ Read comments at config.py file for more details.
 * [/quota](http://localhost:3000/quota) - Return your Amazon SES quota (max-24h-send, sent-last-24h and max-send-rate)
 * [/statistics](http://localhost:3000/statistics) - Return your Amazon SES usage statistics.
 * [/verify](http://localhost:3000/verify) - Return your verified email address (by Amazon).
-* [/verify/add](http://localhost:3000/verify/add) - Verify email address. Send the email as param. [example](http://localhost:3000/verify/add?email=AsyncSES@AsyncSES.com).
-* [/verify/del](http://localhost:3000/verify/del) - Unverify email address. Send the email as param. [example] (http://localhost:3000/verify/del?email=AsyncSES@AsyncSES.com).
+* [/verify/add](http://localhost:3000/verify/add) - Verify email address. Send the email as param. [example](http://localhost:3000/verify/add?email=you@example.com).
+* [/verify/del](http://localhost:3000/verify/del) - Unverify email address. Send the email as param. [example] (http://localhost:3000/verify/del?email=you@example.com).
 * All logs are written on logs/worker.log file. (Exceptions, errors and sent emails).
 * All API responses are in json format.
 * All API requests can be made in GET and POST methods.
@@ -73,15 +73,15 @@ Read comments at config.py file for more details.
 
     # message data
     data = {
-        'from': 'some@email.com',
-        'to:' 'another@email.com',
+        'from': 'you@example.com',
+        'to:' 'you@example.com',
         'subject': 'Hello dude',
-        'text': 'AmazonSES test.',
-        'html': '<b>AmazonSES</b> test.',
+        'text': 'AsyncSES test.',
+        'html': '<b>AsyncSES</b> test.',
     }
 
-    # if you need specific headers:
-    headers = {'return-path': 'thatsme@email.com',}
+    # optional, only if you need specific headers:
+    headers = {'return-path': 'other-email@example.com',}
     data['headers'] = json.dumps(headers)
 
     # encode the POST data
@@ -101,7 +101,7 @@ Read comments at config.py file for more details.
 
 ### Know issues
 
-* AmazonSES has some [sending limits](http://aws.amazon.com/ses/#details): the sending quota and maximum send rate. At this moment AsyncSES doesn't care about it and presumes that you have large limits and a good reputation in AmazonSES. At this time there's only one workaround to control how much emails per second will be sent: you can just adjust the number of workers at config.py file. It's not precise, but works (poorly).
+* Amazon SES has some [sending limits](http://aws.amazon.com/ses/#details): the sending quota and maximum send rate. At this moment AsyncSES doesn't care about it and presumes that you have large limits and a good reputation in Amazon SES. At this time there's only one workaround to control how much emails per second will be sent: you can just adjust the number of workers at config.py file. It's not precise, but works (poorly).
 
 * Please note that all messages in OUTBOX are stored in memory. If your messages are big and your outbox are accepting a large number of messages, you can run out of memory. 
 
@@ -120,5 +120,5 @@ Read comments at config.py file for more details.
 
 ### License
 
-* MIT (see [LICENSE](https://github.com/robss/AmazonSES-Sendmail/blob/master/LICENSE) for details)
+* MIT (see [LICENSE](https://github.com/robss/AsyncSES/blob/master/LICENSE) for details)
 
