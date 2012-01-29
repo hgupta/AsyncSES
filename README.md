@@ -44,14 +44,16 @@ Read comments at config.py file for more details.
 
 ### Features
 
-* [/add](http://localhost:3000/add) - Add message to outbox. Accept both POST and GET methods.
+* [/add](http://localhost:3000/add) - Add message to outbox.
 * [/status](http://localhost:3000/status) - Return how much emails are queued, sent, errors and how much messages are in outbox.
 * [/quota](http://localhost:3000/quota) - Return your Amazon SES quota (max-24h-send, sent-last-24h and max-send-rate)
 * [/statistics](http://localhost:3000/statistics) - Return your Amazon SES usage statistics.
 * [/verify](http://localhost:3000/verify) - Return your verified email address (by Amazon).
 * [/verify/add](http://localhost:3000/verify/add) - Verify email address. Send the email as param. [example](http://localhost:3000/verify/add?email=xxx@xxx.com).
 * [/verify/del](http://localhost:3000/verify/del) - Unverify email address. Send the email as param. [example] (http://localhost:3000/verify/del?email=xxx@xxx.com).
-* All logs are written on file logs/worker.log. (Exceptions, errors and sent emails).
+* All logs are written on logs/worker.log file. (Exceptions, errors and sent emails).
+* All API responses are in json format.
+* All API requests can be made in GET and POST methods.
 
 
 ### Python client example

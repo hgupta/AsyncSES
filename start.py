@@ -91,7 +91,7 @@ def add():
     return json_encode(resp)
 
 
-@route('/status')
+@route('/status', method=['GET', 'POST'])
 def index():
     getvalue = lambda x: str(x.__reduce__()[1][0])
     resp = {
@@ -104,7 +104,7 @@ def index():
     return json_encode(resp)
 
 
-@route('/quota')
+@route('/quota', method=['GET', 'POST'])
 def quota():
     try:
         q = ses.getSendQuota()
@@ -118,7 +118,7 @@ def quota():
     return json_encode(resp)
 
 
-@route('/statistics')
+@route('/statistics', method=['GET', 'POST'])
 def statistic():
     try:
         s = ses.getSendStatistics()
@@ -128,7 +128,7 @@ def statistic():
     return json_encode(resp)
 
 
-@route('/verify')
+@route('/verify', method=['GET', 'POST'])
 def verify():
     try:
         v = ses.listVerifiedEmailAddresses()
@@ -137,7 +137,7 @@ def verify():
     return json_encode(v.members)
 
 
-@route('/verify/add')
+@route('/verify/add', method=['GET', 'POST'])
 def verify():
     email = request.params.get('email', None)
     if not email:
@@ -150,7 +150,7 @@ def verify():
     return json_encode(resp)
 
 
-@route('/verify/del')
+@route('/verify/del', method=['GET', 'POST'])
 def verify():
     email = request.params.get('email', None)
     if not email:
