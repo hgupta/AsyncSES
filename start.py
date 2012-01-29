@@ -239,7 +239,8 @@ if __name__ == '__main__':
     try:
         p.join()
     except:
-        # prevent loss of the message queue
+        # prevent loss of the message queue.
+        # todo: instead of wait, save it on disk (or db).
         import time
         while not outbox.empty():
             try:
