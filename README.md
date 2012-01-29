@@ -34,7 +34,6 @@ If you just want to do some tests, you can access the [/add url](http://localhos
 
 The config.py file has (at this time) just a few options to configure:
 
-* DEBUG: turn on bottle DEBUG;
 * AMAZON_KEY and AMAZON_SECRET: your Amazon ID and Secret;
 * HOST and PORT: default host and port to listen;
 * WORKERS: number of workers to run in parallel;
