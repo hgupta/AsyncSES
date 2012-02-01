@@ -12,11 +12,7 @@ AsyncSES uses [Bottle](http://bottlepy.org) for HTTP API and [Gevent](http://www
 
 If you just want to send some emails by Amazon SES, AsyncSES is not for you. Use [python-amazon-ses-api](https://github.com/pankratiev/python-amazon-ses-api) instead of AsyncSES.
 
-But if you intend to send large number of emails and is worried delivery all of them in time, AsyncSES is what you need.
-
-Using gevent green-threads, AsyncSES don't waste time waiting for a reply from Amazon SES API before send the next message. 
-
-Each worker runs on it own pseudo-thread, without locks or waitings. All messages are included on a outbox queue, while all workers catch each message and send it independently.
+But if you intend to send large number of emails and u are worried about delivery all of them in time, AsyncSES is a good choice for you.
 
 AsyncSES has been used in production to send more than half million messages per day in just a few hours.
 
