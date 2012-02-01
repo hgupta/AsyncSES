@@ -4,7 +4,7 @@ AsyncSES is a asynchronous email library over HTTP protocol, to use with Amazon 
 
 It's written in Python, but provides a full featured API to use with any programming language.
 
-AsyncSES uses [Bottle](http://bottlepy.org) for HTTP REST API and [Gevent](http://www.gevent.org/) for lightweight concurrency.
+AsyncSES uses [Bottle](http://bottlepy.org) for HTTP API and [Gevent](http://www.gevent.org/) for lightweight concurrency.
 
 
 
