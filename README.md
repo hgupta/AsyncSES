@@ -26,9 +26,9 @@ AsyncSES has been used in production to send more than half million messages per
 
 ### Usage
 
-1. Insert your Amazon SES access key in config.py
+1. Insert your Amazon SES access key and secret in config.py
 2. Set WORKERS and OUTBOX_MAXSIZE as needed, in config.py
-3. Start the server:  python start.py
+3. Start the server: python start.py
 4. Send your emails (see Python client example below)
 
 If you just want to do some tests, you can access the [/add url](http://localhost:3000/add/?from=you@example.com&to=you@example.com&subject=subject&text=message+text
